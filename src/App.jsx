@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useRef, useState } from "react";
+
+import { Rnd } from "react-rnd";
+import { useClickOutside } from "./use-click-oustide";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [watch, setWatch] = useState(false);
 
+  const noWatch = () => {
+    setWatch(false);
+  };
+
+  const buttonRef = useRef();
+  const ref = useClickOutside(noWatch, buttonRef, watch);
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div>
+      <button
+        ref={buttonRef}
+        onClick={() => {
+          setWatch(true);
+        }}
+      >
+        watch
+      </button>
+
+      <div ref={ref}>
+        {watch && (
+          <Rnd
+            style={{ position: "relative", zIndex: "1000" }}
+            default={{
+              y: 30,
+              width: 100,
+              height: 180,
+            }}
+            bounds={{
+              top: 10,
+              left: 50, // Leave space on the left
+              right: window.innerWidth - 50, // Leave space on the right
+              bottom: window.innerHeight - 50, // Leave space at the bottom
+            }}
+            minWidth={100}
+            minHeight={100}
+          >
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/PtGf40OhIpE?autoplay=1&rel=0"
+              title="Selecting the Right Construction Materials: Enirman&#39;s Guide"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            ></iframe>
+            <p
+              onClick={() => setWatch(false)}
+              style={{ position: "absolute", top: -50, right: 60 }}
+            >
+              Close
+            </p>
+            <p style={{ position: "absolute", top: -50, right: 0 }}>Drag</p>
+          </Rnd>
+        )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
